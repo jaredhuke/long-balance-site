@@ -4,237 +4,362 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Long Balance</title>
-<meta name="description" content="A deterministic survival-to-civilization game for iPhone, iPad and Apple Vision Pro. Spend the light. Read the ground. Keep the fire.">
+<meta name="description" content="A deterministic survival-to-civilization game for iPhone, iPad, Mac and Apple Vision Pro. Take what the valley gives, and give it back — or your grandchildren inherit a ruin.">
 <meta property="og:title" content="The Long Balance">
-<meta property="og:description" content="Spend the light. Read the ground. Keep the fire. A valley that lives while you work.">
-<meta property="og:image" content="/hero-hearth.jpg">
+<meta property="og:description" content="Take, and give back. Cut every tree and the rain that the forest sponged now strips your soil. Nine valleys, each with its own weather, plants and beasts.">
+<meta property="og:image" content="/hero-forest.jpg">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="#F4F1EA">
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14140F" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Archivo:wght@600;700&display=swap" rel="stylesheet">
 <style>
+  /* THE LIGHT PALETTE IS THE COMPLETE ONE, on bare :root, so the un-stamped default
+     always resolves. Dark redefines only the tokens. */
   :root{
     --paper:#F4F1EA; --leaf:#FAF7EE; --panel:#ECE7D9; --ink:#22201A; --ink-soft:#68624F;
-    --gold:#6F5E33; --celadon:#7A9476; --cinnabar:#A63E2C; --hair:#CFC8B4;
+    --gold:#6F5E33; --celadon:#7A9476; --hair:#CFC8B4; --edge:rgba(34,32,26,.08);
+    --veil-a:rgba(244,241,234,.95); --veil-b:rgba(244,241,234,.5);
+    --veil-c:rgba(244,241,234,0); --veil-d:rgba(244,241,234,.93);
     --serif:'Spectral', Charter, Georgia, 'Times New Roman', serif;
     --sans:'Archivo', -apple-system, 'Helvetica Neue', Arial, sans-serif;
-    --measure:34rem;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#14140F; --leaf:#1B1B15; --panel:#22221A; --ink:#F0EADA; --ink-soft:#A79C82;
+      --gold:#C9A961; --celadon:#8FA98A; --hair:#3A3729; --edge:rgba(240,234,218,.10);
+      --veil-a:rgba(20,20,15,.94); --veil-b:rgba(20,20,15,.45);
+      --veil-c:rgba(20,20,15,0); --veil-d:rgba(20,20,15,.92);
+    }
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
-  body{
-    margin:0; background:var(--paper); color:var(--ink);
-    font-family:var(--serif); font-weight:300; font-size:clamp(17px,1.05vw + 14px,20px);
-    line-height:1.62; letter-spacing:.002em;
-  }
-  img{max-width:100%; display:block}
+  body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--serif);
+    font-weight:300; font-size:clamp(17px,1.05vw + 14px,20px); line-height:1.62}
+  /* height:auto — width/height attributes plus a CSS width will squash an image without it */
+  img{max-width:100%; height:auto; display:block}
   a{color:inherit}
   .wrap{max-width:74rem; margin:0 auto; padding:0 clamp(1.25rem,4vw,3rem)}
-  .eyebrow{
-    font-family:var(--sans); font-weight:700; font-size:.7rem; letter-spacing:.22em;
-    text-transform:uppercase; color:var(--gold); margin:0 0 .9rem;
-  }
+  .narrow{max-width:46rem}
+  .eyebrow{font-family:var(--sans); font-weight:700; font-size:.7rem; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--gold); margin:0 0 .9rem}
   h1,h2,h3{font-weight:400; letter-spacing:-.012em; text-wrap:balance; margin:0}
-  .lede{font-size:1.18em; color:var(--ink-soft)}
-  .rule{height:1px; background:var(--hair); border:0; margin:0}
+  h2{font-size:clamp(1.9rem,3.6vw,2.9rem); margin-bottom:1.1rem}
+  p{margin:0 0 1.15rem} p:last-child{margin-bottom:0}
+  .lede{font-size:1.16em} .soft{color:var(--ink-soft)}
+  .drop::first-letter{float:left; font-size:3.35em; line-height:.84; padding:.06em .09em 0 0; color:var(--gold)}
 
-  /* ── the hero: the frame the game is about ───────────────────────────── */
   .hero{position:relative; overflow:hidden; background:var(--panel)}
-  .hero-img{
-    width:100%; height:min(88vh,860px); object-fit:cover; object-position:50% 62%;
-    filter:saturate(.98);
-  }
-  .hero-veil{
-    position:absolute; inset:0;
-    background:linear-gradient(180deg,rgba(244,241,234,.94) 0%,rgba(244,241,234,.55) 26%,
-               rgba(244,241,234,0) 52%,rgba(244,241,234,.12) 76%,rgba(244,241,234,.92) 100%);
-  }
-  .hero-copy{position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-start}
+  .hero-img{width:100%; height:min(90vh,900px); object-fit:cover; object-position:50% 52%}
+  .hero-veil{position:absolute; inset:0; background:linear-gradient(180deg,
+    var(--veil-a) 0%, var(--veil-b) 24%, var(--veil-c) 50%, var(--veil-c) 72%, var(--veil-d) 100%)}
+  .hero-copy{position:absolute; inset:0}
   .hero-copy .wrap{padding-top:clamp(2.5rem,7vh,5rem)}
   .title{font-size:clamp(2.6rem,7.4vw,5.2rem); line-height:1.02; margin:0 0 .5rem}
-  .tag{font-size:clamp(1.05rem,1.9vw,1.5rem); font-style:italic; color:var(--ink-soft); max-width:26rem}
-  .hero-foot{
-    position:absolute; left:0; right:0; bottom:0; padding-bottom:clamp(1.25rem,4vh,2.5rem);
-  }
-  .platforms{
-    font-family:var(--sans); font-weight:600; font-size:.74rem; letter-spacing:.16em;
-    text-transform:uppercase; color:var(--gold);
-  }
+  .tag{font-size:clamp(1.05rem,1.9vw,1.5rem); font-style:italic; color:var(--ink-soft); max-width:28rem; margin:0}
+  .hero-foot{position:absolute; left:0; right:0; bottom:0; padding-bottom:clamp(1.25rem,4vh,2.5rem)}
+  .platforms{font-family:var(--sans); font-weight:600; font-size:.74rem; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--gold); margin:0}
 
-  /* ── the thesis ──────────────────────────────────────────────────────── */
-  .thesis{padding:clamp(3.5rem,9vh,6.5rem) 0}
-  .thesis p{max-width:var(--measure); margin:0 0 1.15rem; font-size:1.16em}
-  .thesis p:last-child{margin-bottom:0}
-  .drop::first-letter{
-    float:left; font-size:3.35em; line-height:.84; padding:.06em .09em 0 0; color:var(--gold);
-  }
+  section{padding:clamp(3.5rem,9vh,6.5rem) 0}
+  section + section{border-top:1px solid var(--hair)}
+  .alt{background:var(--leaf)}
 
-  /* ── the five surfaces ───────────────────────────────────────────────── */
-  .surfaces{padding:clamp(3rem,7vh,5rem) 0; border-top:1px solid var(--hair); background:var(--leaf)}
-  .grid{display:grid; gap:clamp(2rem,4vw,3.25rem); grid-template-columns:1fr}
-  @media(min-width:720px){ .grid{grid-template-columns:repeat(2,1fr)} }
-  @media(min-width:1080px){ .grid{grid-template-columns:repeat(3,1fr)} }
   figure{margin:0}
-  figure img{
-    border:1px solid var(--hair); border-radius:14px; background:var(--panel);
-    box-shadow:0 1px 0 rgba(34,32,26,.04), 0 18px 40px -28px rgba(34,32,26,.45);
-  }
+  figure img{border:1px solid var(--hair); border-radius:14px; background:var(--panel);
+    box-shadow:0 1px 0 var(--edge), 0 18px 40px -28px rgba(0,0,0,.45)}
   figcaption{padding-top:1rem}
   figcaption h3{font-size:1.24rem; margin-bottom:.28rem}
   figcaption p{margin:0; color:var(--ink-soft); font-size:.95em}
 
-  /* ── the wide plate ──────────────────────────────────────────────────── */
-  .plate{padding:clamp(3.5rem,8vh,6rem) 0; border-top:1px solid var(--hair)}
-  .plate-inner{display:grid; gap:clamp(2rem,5vw,4rem); align-items:center; grid-template-columns:1fr}
-  @media(min-width:900px){ .plate-inner{grid-template-columns:1.05fr .95fr} }
-  .plate img{border:1px solid var(--hair); border-radius:14px}
-  .plate h2{font-size:clamp(1.8rem,3.2vw,2.6rem); margin-bottom:.9rem}
-  .plate p{max-width:30rem; color:var(--ink-soft)}
-  .plate .alt{background:var(--panel)}
+  .split{display:grid; gap:clamp(2rem,5vw,4rem); align-items:center; grid-template-columns:1fr}
+  @media(min-width:900px){ .split{grid-template-columns:1.1fr .9fr} }
+  .split.flip > *:first-child{order:2}
+  @media(max-width:899px){ .split.flip > *:first-child{order:0} }
+  .split p{max-width:30rem; color:var(--ink-soft)}
 
-  /* ── the laws ────────────────────────────────────────────────────────── */
-  .laws{padding:clamp(3rem,7vh,5rem) 0; border-top:1px solid var(--hair); background:var(--leaf)}
-  .laws ol{list-style:none; margin:0; padding:0; display:grid; gap:1.6rem}
-  @media(min-width:820px){ .laws ol{grid-template-columns:repeat(3,1fr); gap:2.4rem} }
+  .grid{display:grid; gap:clamp(2rem,4vw,3.25rem); grid-template-columns:1fr}
+  @media(min-width:720px){ .grid{grid-template-columns:repeat(2,1fr)} }
+  @media(min-width:1080px){ .grid{grid-template-columns:repeat(3,1fr)} }
+  .pair{display:grid; gap:clamp(1.5rem,3vw,2.5rem); grid-template-columns:1fr}
+  @media(min-width:720px){ .pair{grid-template-columns:repeat(2,1fr)} }
+
+  .chain{display:grid; gap:1.4rem; margin-top:2.6rem; padding:0; list-style:none}
+  @media(min-width:800px){ .chain{grid-template-columns:repeat(4,1fr); gap:1.6rem} }
+  .chain b{display:block; font-family:var(--sans); font-weight:700; font-size:.68rem;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--gold); margin-bottom:.4rem}
+  .chain span{color:var(--ink-soft); font-size:.95em}
+  blockquote{margin:2.4rem 0 0; padding-left:1.4rem; border-left:3px solid var(--celadon);
+    font-size:1.22em; font-style:italic; max-width:36rem}
+
+  .laws{list-style:none; margin:0; padding:0; display:grid; gap:1.6rem}
+  @media(min-width:820px){ .laws{grid-template-columns:repeat(3,1fr); gap:2.4rem} }
   .laws li{padding-left:1.1rem; border-left:2px solid var(--celadon)}
   .laws b{font-weight:600; display:block; margin-bottom:.25rem}
   .laws span{color:var(--ink-soft); font-size:.95em}
 
-  /* ── the close ───────────────────────────────────────────────────────── */
-  .close{padding:clamp(4rem,10vh,7rem) 0; border-top:1px solid var(--hair); text-align:center}
-  .close h2{font-size:clamp(2rem,4.4vw,3.2rem); margin-bottom:1rem}
-  .close p{max-width:32rem; margin:0 auto 2rem; color:var(--ink-soft)}
-  .price{
-    display:inline-flex; align-items:baseline; gap:.6rem; padding:.85rem 1.6rem;
+  .close{text-align:center}
+  .close p{max-width:32rem; margin-left:auto; margin-right:auto; color:var(--ink-soft)}
+  .price{display:inline-flex; align-items:baseline; gap:.6rem; padding:.85rem 1.6rem;
     border:1px solid var(--hair); border-radius:999px; background:var(--leaf);
-    font-family:var(--sans); font-weight:600; letter-spacing:.06em; font-size:.9rem;
-  }
+    font-family:var(--sans); font-weight:600; letter-spacing:.06em; font-size:.9rem}
   .price b{font-family:var(--serif); font-weight:400; font-size:1.5rem; letter-spacing:0}
-  .note{margin-top:1.4rem; font-size:.9em; color:var(--ink-soft); font-style:italic}
 
   footer{border-top:1px solid var(--hair); padding:2.5rem 0 3.5rem; background:var(--panel)}
   .foot{display:flex; flex-wrap:wrap; gap:.75rem 2rem; justify-content:space-between;
-        font-size:.84em; color:var(--ink-soft)}
+    font-size:.84em; color:var(--ink-soft)}
   .foot a{text-decoration:none; border-bottom:1px solid var(--hair)}
-  .foot a:hover{border-bottom-color:var(--gold); color:var(--gold)}
+  .foot a:hover,.foot a:focus-visible{color:var(--gold); border-bottom-color:var(--gold)}
 
   @media (prefers-reduced-motion:no-preference){
     .reveal{opacity:0; transform:translateY(14px); transition:opacity .7s ease, transform .7s ease}
     .reveal.in{opacity:1; transform:none}
   }
+
+  /* ── THE LETTER ─────────────────────────────────────────────────────────────
+     A dialog, not a mailto: the address stays on the server and the reader never
+     leaves the page. Styled from the same tokens as everything else, so it reads
+     as part of the site in either theme. */
+  .linkish{font:inherit; color:inherit; background:none; border:0; padding:0;
+    text-decoration:underline; text-underline-offset:3px; cursor:pointer}
+  dialog#letter{border:1px solid var(--hair); border-radius:16px; background:var(--leaf);
+    color:var(--ink); padding:0; width:min(34rem,92vw); box-shadow:0 24px 70px rgba(0,0,0,.28)}
+  dialog#letter::backdrop{background:rgba(0,0,0,.45)}
+  dialog#letter form{padding:clamp(1.4rem,3vw,2rem); display:block}
+  dialog#letter h3{font-size:1.6rem; margin:0 0 .5rem}
+  dialog#letter label{display:block; font-family:var(--sans); font-weight:600;
+    font-size:.74rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft);
+    margin:1.05rem 0 .35rem}
+  dialog#letter input, dialog#letter textarea{width:100%; font:inherit; font-size:.95em;
+    color:var(--ink); background:var(--paper); border:1px solid var(--hair);
+    border-radius:9px; padding:.6rem .7rem}
+  dialog#letter textarea{resize:vertical; min-height:7rem}
+  dialog#letter input:focus-visible, dialog#letter textarea:focus-visible{
+    outline:2px solid var(--celadon); outline-offset:1px}
+  dialog#letter .row{display:flex; gap:.7rem; justify-content:flex-end; margin-top:1.2rem}
+  dialog#letter button[type=submit], dialog#letter .ghost{font-family:var(--sans);
+    font-weight:700; font-size:.82rem; letter-spacing:.04em; border-radius:999px;
+    padding:.62rem 1.3rem; cursor:pointer; border:1px solid var(--hair)}
+  dialog#letter button[type=submit]{background:var(--ink); color:var(--paper); border-color:var(--ink)}
+  dialog#letter button[type=submit][disabled]{opacity:.6; cursor:default}
+  dialog#letter .ghost{background:transparent; color:var(--ink-soft)}
+  dialog#letter .small{font-size:.9em; margin:.2rem 0 0}
+  dialog#letter .tiny{font-size:.76em; margin:1rem 0 0; line-height:1.5}
+  dialog#letter .say{margin:.9rem 0 0; font-size:.9em; min-height:1.2em}
+  dialog#letter .say.bad{color:#AE3220} dialog#letter .say.good{color:var(--celadon)}
+  @media (prefers-color-scheme: dark){ dialog#letter .say.bad{color:#E0705A} }
+  /* the honeypot: present for a robot, absent for a person and for a screen reader */
+  .hedge{position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden}
 </style>
 </head>
 <body>
 
 <header class="hero">
-  <img class="hero-img" src="/hero-hearth.jpg" alt="Standing at the hearth at dusk, the palisade and the wooded valley beyond">
+  <img class="hero-img" src="/hero-forest.jpg" width="1400" height="2375"
+       alt="A snow-dusted conifer forest falling away to a frozen valley floor">
   <div class="hero-veil"></div>
   <div class="hero-copy">
     <div class="wrap">
-      <p class="eyebrow">Distributed by Daito Design Group</p>
       <h1 class="title">The Long Balance</h1>
-      <p class="tag">Spend the light. Read the ground. Keep the fire.</p>
+      <p class="tag">Take what the valley gives. Give it back, or your grandchildren inherit a ruin.</p>
     </div>
     <div class="hero-foot">
-      <div class="wrap"><p class="platforms">iPhone &nbsp;·&nbsp; iPad &nbsp;·&nbsp; Apple Vision Pro</p></div>
+      <div class="wrap"><p class="platforms">iPhone &nbsp;·&nbsp; iPad &nbsp;·&nbsp; Mac &nbsp;·&nbsp; Apple Vision Pro</p></div>
     </div>
   </div>
 </header>
 
-<section class="thesis">
-  <div class="wrap">
-    <p class="drop lede">You arrive in a valley with nothing, and no one is coming. Each morning gives you a
-      fixed number of hours, and the only question the game ever asks is what those hours buy.</p>
-    <p>Fire warms. Rain soaks. Hunger builds, and a wound left alone turns bad. Nothing here is
-      abstracted into a health bar or a resource counter — the cold is a real thermal budget, the
-      larder is real food that really rots, and the ground remembers what you took out of it.</p>
-    <p>There is no score. Live long enough, and the place earns a name.</p>
+<section>
+  <div class="wrap narrow">
+    <p class="drop lede">You arrive in a valley with nothing, and no one is coming. Each morning gives
+      you a fixed number of hours, and the only question the game ever asks is what those hours buy.</p>
+    <p class="soft">Fire warms. Rain soaks. Hunger builds, and a wound left alone turns bad. Nothing is
+      abstracted into a health bar: the cold is a real thermal budget, the larder is real food that
+      really rots, and the ground remembers what you took out of it.</p>
+    <p class="soft">There is no score. Live long enough, and the place earns a name.</p>
   </div>
 </section>
 
-<section class="surfaces">
+<section class="alt">
+  <div class="wrap split">
+    <img class="reveal" src="/vision-valley.jpg" width="1500" height="1149" loading="lazy"
+         alt="The valley as a living diorama on a table, seen on Apple Vision Pro">
+    <div>
+      <p class="eyebrow">Apple Vision Pro</p>
+      <h2>Your valley, on the table</h2>
+      <p>The whole holding sits in the room as a diorama you can lean into, turn on its axis and
+        walk around — the fire alight, the river running, the smoke leaning with the wind.</p>
+      <p>The same life, the same save, on every device you own.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">What the game is actually about</p>
+    <h2>The balance is the whole game</h2>
+    <div class="narrow">
+      <p>Every other survival game asks how fast you can strip a place. This one asks what is left
+        when you are finished — because the valley answers back, on a delay long enough that you
+        will have forgotten what you did.</p>
+      <p class="soft">Clear the slope of trees and you have a winter of firewood and a field. You have
+        also taken away the sponge that held the rain. The next storm runs straight off the bare
+        ground, strips the soil you meant to farm, and drops it as silt in the river. The silt fills
+        the pool behind your dam and chokes the weir the fish run through. None of it is a scripted
+        punishment. It is four systems doing what they honestly do, in the order they do it.</p>
+    </div>
+    <ul class="chain">
+      <li class="reveal"><b>You cut</b><span>A slope of timber, felled for the woodpile and a clear field.</span></li>
+      <li class="reveal"><b>The rain runs</b><span>Nothing holds it now. It carries the topsoil downhill.</span></li>
+      <li class="reveal"><b>The river silts</b><span>Your soil settles behind the dam and in the weir.</span></li>
+      <li class="reveal"><b>The fish stop</b><span>And the field you cleared it for is thinner every year.</span></li>
+    </ul>
+    <blockquote>Build so the valley is richer for your being in it, not poorer. Every decision is
+      weighed against the seventh generation — the people who will live here long after you are a
+      name in the chronicle.</blockquote>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <p class="eyebrow">Nine valleys, and none of them forgives the same mistake</p>
+    <h2>Every ground has its own argument</h2>
+    <div class="narrow"><p class="soft">A boreal taiga, a Chihuahuan scrub, a rice-river valley, a
+      high Andean shelf, the Sahel's edge, a Pacific rain coast, an Apennine hillside, a Baltic
+      shore. Each carries its own weather, its own plants and its own beasts — and its own way of
+      killing you. What you learn in one is half-wrong in the next.</p></div>
+    <div class="grid" style="margin-top:2.6rem">
+      <figure class="reveal">
+        <img src="/biome-taiga.jpg" width="1070" height="1500" loading="lazy"
+             alt="The boreal taiga in autumn: birch and larch turned gold and red among the firs">
+        <figcaption><h3>The boreal taiga, in autumn</h3><p>The gold is a warning. The long dark and
+          the deep cold are six weeks out, firewood stops being a chore and becomes the whole year's
+          arithmetic — and the wolverine takes whatever you hang.</p></figcaption>
+      </figure>
+      <figure class="reveal">
+        <img src="/biome-winter.jpg" width="1070" height="1500" loading="lazy"
+             alt="The same taiga valley under deep snow, the whole forest white">
+        <figcaption><h3>The same valley, in winter</h3><p>Bitter, and snowing. Nothing grows, nothing
+          forages, and every day is spent against what the autumn put by. This is the same ground as
+          the picture beside it, ninety days on.</p></figcaption>
+      </figure>
+      <figure class="reveal">
+        <img src="/biome-scrub.jpg" width="1070" height="1500" loading="lazy"
+             alt="The Chihuahuan scrub: pale desert plain, an arroyo cutting through it">
+        <figcaption><h3>The Chihuahuan scrub</h3><p>Heat, an arroyo that is dry until it is lethal,
+          and salt on the playa. Water is not a resource here. It is a daily problem with a deadline.</p></figcaption>
+      </figure>
+      <figure class="reveal">
+        <img src="/biome-river.jpg" width="1070" height="1500" loading="lazy"
+             alt="An East Asian river valley: dense green forest on a monsoon floodplain">
+        <figcaption><h3>The Yangtze basin</h3><p>Monsoon, rice and a tiger. The wet comes on a
+          schedule you can learn and cannot argue with, and the forest grows back faster than you
+          can cut it — which is the only place in this game where that is true.</p></figcaption>
+      </figure>
+      <figure class="reveal">
+        <img src="/biome-savanna.jpg" width="760" height="1289" loading="lazy"
+             alt="The West African savanna: dry gold grass and scattered trees">
+        <figcaption><h3>The West African savanna</h3><p>A wet season and a dry one, sorghum, and a
+          lion. Water is not a resource here, it is a season you have to survive.</p></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section>
   <div class="wrap">
     <p class="eyebrow">Five ways of looking at one valley</p>
     <div class="grid">
       <figure class="reveal">
-        <img src="/day.jpg" alt="The Day screen: the day's asks and the plan for the hours" loading="lazy" width="900" height="1525">
-        <figcaption>
-          <h3>The Day</h3>
-          <p>What the light will buy. The day asks, you answer, and the hours run down the list in
-             the order you set them.</p>
-        </figcaption>
+        <img src="/day.jpg" width="900" height="1527" loading="lazy"
+             alt="The Day: the arc of daylight and what the land is telling you">
+        <figcaption><h3>The Day</h3><p>Twelve hours of light, drawn as an arc. Spend them down the
+          list in the order you set, and live with it.</p></figcaption>
       </figure>
       <figure class="reveal">
-        <img src="/valley.jpg" alt="The valley in three dimensions, the camp inside its palisade" loading="lazy" width="1100" height="1866">
-        <figcaption>
-          <h3>The Valley</h3>
-          <p>Everything you have built, standing where you put it. Lift away for the whole holding,
-             or stand at your own fire.</p>
-        </figcaption>
+        <img src="/hearth.jpg" width="900" height="1527" loading="lazy"
+             alt="Standing at the hearth at a keeper's eye height">
+        <figcaption><h3>The Valley</h3><p>Everything you have built, standing where you put it. Fly
+          up for the whole holding, or stand at your own fire and look around.</p></figcaption>
       </figure>
       <figure class="reveal">
-        <img src="/plan.jpg" alt="The Plan: a survey sheet with contours and layers" loading="lazy" width="900" height="1525">
-        <figcaption>
-          <h3>The Plan</h3>
-          <p>The same ground as a drawing. Contours, seep, sparks and wind — read the land before
-             you commit a season to it.</p>
-        </figcaption>
+        <img src="/plan.jpg" width="900" height="1525" loading="lazy"
+             alt="The Plan: a survey sheet with contours and readable layers">
+        <figcaption><h3>The Plan</h3><p>The same ground as a drawing. Contours, seep, sparks and
+          wind — read the land before you spend a season on it.</p></figcaption>
       </figure>
       <figure class="reveal">
-        <img src="/dwelling.jpg" alt="The Dwelling: measured plan, section and elevation of the house" loading="lazy" width="900" height="1525">
-        <figcaption>
-          <h3>The Dwelling</h3>
-          <p>Your house, measured. Plan, section and elevation, drawn to scale and redrawn every
-             time you raise a rung.</p>
-        </figcaption>
+        <img src="/people.jpg" width="900" height="1525" loading="lazy"
+             alt="The People: each settler with their own readings and their own roof">
+        <figcaption><h3>The People</h3><p>Five ledgers and no health bar. Everyone has an age, a
+          leaning, someone they walked in with, and somewhere to sleep.</p></figcaption>
       </figure>
       <figure class="reveal">
-        <img src="/people.jpg" alt="The People: each settler with their own readings" loading="lazy" width="900" height="1525">
-        <figcaption>
-          <h3>The People</h3>
-          <p>Five ledgers and no health bar. Everyone who joins you has an age, a leaning, someone
-             they walked in with, and somewhere to sleep.</p>
-        </figcaption>
+        <img src="/chronicle.jpg" width="784" height="1500" loading="lazy"
+             alt="The Chronicle: a day's events written out as they happened">
+        <figcaption><h3>The Chronicle</h3><p>A life, written as it was lived. Not a save file — a
+          record, in the order the days actually fell.</p></figcaption>
       </figure>
       <figure class="reveal">
-        <img src="/chronicle.jpg" alt="The Chronicle: the record of a life as it was lived" loading="lazy" width="900" height="1525">
-        <figcaption>
-          <h3>The Chronicle</h3>
-          <p>A life, written as it was lived. Not a save file — a record, in the order the days
-             actually fell.</p>
-        </figcaption>
+        <img src="/sky.jpg" width="900" height="1525" loading="lazy"
+             alt="The sky plate: an astrolabe cut for this valley's own latitude">
+        <figcaption><h3>The Sky</h3><p>An astrolabe cut for <em>this</em> valley's latitude. It shows
+          only what your camp has earned — a bare limb at first.</p></figcaption>
       </figure>
     </div>
   </div>
 </section>
 
-<section class="plate">
-  <div class="wrap plate-inner">
-    <img class="reveal" src="/sky.jpg" alt="The sky plate: an astrolabe cut for this valley's latitude" loading="lazy" width="900" height="1525">
+<section class="alt">
+  <div class="wrap">
+    <p class="eyebrow">From open sky to a measured house</p>
+    <h2>You start with nothing at all</h2>
+    <div class="narrow"><p class="soft">Not a starter hut. Open ground, and a night coming. Pile
+      branches into a debris hut and the ladder begins: mud into the weave, reed over it, stones at
+      the foot. Every rung you raise is redrawn as a measured sheet — plan, section, elevation — so
+      you can see exactly what you have built and what it is keeping out.</p></div>
+    <div class="pair" style="margin-top:2.4rem">
+      <figure class="reveal">
+        <img src="/dwelling-early.jpg" width="900" height="1527" loading="lazy"
+             alt="The dwelling sheet on day one: no shelter yet, open ground, nothing raised">
+        <figcaption><p class="soft"><b>Day one.</b> Open sky, nothing raised.</p></figcaption>
+      </figure>
+      <figure class="reveal">
+        <img src="/dwelling.jpg" width="900" height="1525" loading="lazy"
+             alt="The dwelling sheet later: plan, section and elevation of a built house">
+        <figcaption><p class="soft"><b>Later.</b> Plan, section and elevation, drawn to scale.</p></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap split flip">
+    <img class="reveal" src="/ages.jpg" width="1500" height="1281" loading="lazy"
+         alt="The ages: a tech tree of crafts by age, from hand and stone onward">
     <div>
-      <p class="eyebrow">The instrument you build</p>
-      <h2>The sky tells you when</h2>
-      <p>Raise the plate against the stars and it is an astrolabe cut for <em>this</em> valley: the
-        rings drawn for your own latitude, the sun's whole arc from rising to setting, and the two
-        limits the year swings between.</p>
-      <p>It shows only what your camp has earned. A bare limb at first. The tropics once the notched
-        stone stands. The fine divisions only when there is ink to keep the count.</p>
+      <p class="eyebrow">The ages</p>
+      <h2>A hundred and sixty-four crafts, and the reasons between them</h2>
+      <p>Every craft in the game is a real one, in the order history actually found it. You cannot
+        fire brick without a kiln, cannot melt copper without forced air, cannot force air without
+        something to force it with.</p>
+      <p>Nothing unlocks on a timer. Things become possible because you made the thing before them.</p>
     </div>
   </div>
 </section>
 
-<section class="laws">
+<section class="alt">
   <div class="wrap">
     <p class="eyebrow">Three rules the whole game obeys</p>
-    <ol>
+    <ol class="laws">
       <li class="reveal"><b>Everything you see is true.</b><span>What a person wears says what you have
         made. Black earth on the plan is black earth in the world. Nothing is decoration.</span></li>
       <li class="reveal"><b>The same day plays the same way.</b><span>The simulation is deterministic.
         Your valley is not a roll of the dice — it is a place, and it will still be that place
         tomorrow.</span></li>
-      <li class="reveal"><b>Take, and give back.</b><span>Cut every tree and the rain that the forest
-        sponged now strips your soil. Build so the valley is richer for your being in it.</span></li>
+      <li class="reveal"><b>Nothing is free.</b><span>Every hour spent is an hour not spent elsewhere,
+        and every yield taken is taken from something that has to recover.</span></li>
     </ol>
   </div>
 </section>
@@ -245,19 +370,98 @@
     <p>Play a whole season before you decide. If the valley keeps you, one purchase opens it for
       good — every winter, every life, on all your devices.</p>
     <p class="price">Own the Valley <b>$9.99</b></p>
-    <p class="note">One purchase. No subscription, no advertising, nothing to buy twice.</p>
+    <p class="soft" style="margin-top:1.4rem; font-size:.9em; font-style:italic">One purchase. No
+      subscription, no advertising, nothing to buy twice.</p>
   </div>
 </section>
 
 <footer>
   <div class="wrap foot">
-    <span>The Long Balance — coming to iPhone, iPad and Apple Vision Pro.</span>
-    <span>Distributed by Daito Design Group LLC</span>
+    <span>The Long Balance — coming to iPhone, iPad, Mac and Apple Vision Pro.</span>
+    <span><button type="button" id="contact" class="linkish">Write to us</button>
+      <span aria-hidden="true" class="soft"> · </span>
+      <a href="/privacy">Data &amp; privacy</a></span>
   </div>
 </footer>
 
+
+<dialog id="letter" aria-labelledby="letter-h">
+  <form method="dialog" novalidate>
+    <p class="eyebrow">Write to us</p>
+    <h3 id="letter-h">Say what you think</h3>
+    <p class="soft small">Questions, bugs, a valley that went wrong, or a thing you want
+      the game to do. It reaches a person, not a queue.</p>
+    <label for="l-name">Your name <span class="soft">(optional)</span></label>
+    <input id="l-name" name="name" type="text" autocomplete="name" maxlength="120">
+    <label for="l-mail">Your email <span class="soft">(optional — but we cannot answer without it)</span></label>
+    <input id="l-mail" name="email" type="email" autocomplete="email" maxlength="200">
+    <label for="note">Your note</label>
+    <textarea id="note" name="note" rows="5" maxlength="4000" required></textarea>
+    <div class="hedge" aria-hidden="true">
+      <label for="l-hedge">Leave this empty</label>
+      <input id="l-hedge" name="hedgerow" type="text" tabindex="-1" autocomplete="off">
+    </div>
+    <p class="say" role="status" aria-live="polite"></p>
+    <div class="row">
+      <button type="button" class="ghost" data-close>Never mind</button>
+      <button type="submit" class="send">Send it</button>
+    </div>
+    <p class="soft tiny">What you send is used to answer you and kept as a record of what
+      readers ask for. Nothing else. See <a href="/privacy">data &amp; privacy</a>.</p>
+  </form>
+</dialog>
+
 <script>
-  // a quiet reveal, and nothing at all for anyone who has asked for stillness
+  // THE ADDRESS IS NOWHERE IN THIS PAGE — not in the markup, not assembled in script.
+  // A mailto did two bad things: it handed the address to every harvester that loaded the
+  // page, and on a machine with no mail client configured, clicking it did nothing at all.
+  // The letter is posted to our own endpoint, which knows the address and never says it.
+  (function () {
+    const open = document.getElementById('contact');
+    const dlg = document.getElementById('letter');
+    if (!open || !dlg || typeof dlg.showModal !== 'function') return;
+    const form = dlg.querySelector('form');
+    const say = dlg.querySelector('.say');
+    const send = dlg.querySelector('.send');
+    open.addEventListener('click', function () {
+      say.textContent = ''; say.className = 'say';
+      dlg.showModal();
+      const f = dlg.querySelector('#note'); if (f) f.focus();
+    });
+    dlg.querySelectorAll('[data-close]').forEach(function (b) {
+      b.addEventListener('click', function () { dlg.close(); });
+    });
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+      if (!String(data.note || '').trim()) {
+        say.textContent = 'Say something first.'; say.className = 'say bad'; return;
+      }
+      send.disabled = true; send.textContent = 'Sending…';
+      say.textContent = ''; say.className = 'say';
+      try {
+        const r = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const out = await r.json().catch(function () { return {}; });
+        if (r.ok && out.ok) {
+          form.reset();
+          say.textContent = 'It arrived. Thank you — you will hear back.';
+          say.className = 'say good';
+          setTimeout(function () { dlg.close(); }, 2200);
+        } else {
+          say.textContent = out.error || 'That did not get through. Try again shortly.';
+          say.className = 'say bad';
+        }
+      } catch (err) {
+        say.textContent = 'No connection. Try again shortly.';
+        say.className = 'say bad';
+      }
+      send.disabled = false; send.textContent = 'Send it';
+    });
+  })();
   if (matchMedia('(prefers-reduced-motion: no-preference)').matches && 'IntersectionObserver' in window) {
     const io = new IntersectionObserver((es) => {
       es.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('in'), i * 70); io.unobserve(e.target); } });

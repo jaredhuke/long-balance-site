@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data & Privacy — The Long Balance</title>
+<meta name="description" content="What The Long Balance stores, what it sends, and what it does not collect. There is no analytics, no advertising and no tracking in this game.">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14140F" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Archivo:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4F1EA; --leaf:#FAF7EE; --panel:#ECE7D9; --ink:#22201A; --ink-soft:#68624F;
+    --gold:#6F5E33; --celadon:#7A9476; --hair:#CFC8B4; --edge:rgba(34,32,26,.08);
+    --serif:'Spectral', Charter, Georgia, 'Times New Roman', serif;
+    --sans:'Archivo', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#14140F; --leaf:#1B1B15; --panel:#22221A; --ink:#F0EADA; --ink-soft:#A79C82;
+      --gold:#C9A961; --celadon:#8FA98A; --hair:#3A3729; --edge:rgba(240,234,218,.10);
+    }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--serif);
+    font-weight:300; font-size:clamp(17px,1.05vw + 14px,20px); line-height:1.62}
+  a{color:inherit}
+  .wrap{max-width:46rem; margin:0 auto; padding:0 clamp(1.25rem,4vw,3rem)}
+  .eyebrow{font-family:var(--sans); font-weight:700; font-size:.7rem; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--gold); margin:0 0 .9rem}
+  h1,h2{font-weight:400; letter-spacing:-.012em; text-wrap:balance; margin:0}
+  h1{font-size:clamp(2.2rem,5vw,3.2rem); margin-bottom:.6rem}
+  h2{font-size:clamp(1.35rem,2.4vw,1.7rem); margin:2.6rem 0 .8rem}
+  p{margin:0 0 1.15rem}
+  ul{margin:0 0 1.15rem; padding-left:1.2rem} li{margin:0 0 .5rem}
+  .lede{font-size:1.16em; font-style:italic; color:var(--ink-soft)}
+  .top{padding:clamp(3rem,9vh,6rem) 0 1rem; border-bottom:1px solid var(--hair)}
+  .body{padding:2.2rem 0 4rem}
+  .stamp{font-family:var(--sans); font-weight:600; font-size:.72rem; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--ink-soft)}
+  .card{background:var(--panel); border:1px solid var(--hair); border-radius:14px;
+    padding:1.2rem 1.4rem; margin:0 0 1.15rem}
+  footer{border-top:1px solid var(--hair); background:var(--panel); padding:2rem 0 3rem;
+    font-family:var(--sans); font-weight:600; font-size:.8rem; color:var(--ink-soft)}
+  footer a{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <p class="eyebrow"><a href="/" style="text-decoration:none">The Long Balance</a></p>
+    <h1>Data &amp; privacy</h1>
+    <p class="lede">The short version: the game collects nothing about you, and nobody
+      here can see your valley.</p>
+    <p class="stamp">Last revised 4 September 2026</p>
+  </div>
+</header>
+
+<main class="body">
+  <div class="wrap">
+
+    <h2>What the game stores</h2>
+    <p>Your saved lives — the valley, the camp, the people, the chronicle — are written to
+      your own device. That is where they live. Nothing about how you play is sent to us,
+      because there is nowhere for it to be sent: the game has no server of its own, no
+      account to sign into, and no analytics of any kind built into it.</p>
+    <div class="card">
+      <p style="margin:0"><strong>No advertising. No trackers. No third-party analytics
+        or attribution kits. No profile of you is built, sold, or shared.</strong></p>
+    </div>
+
+    <h2>What leaves the device, and where it goes</h2>
+    <p>Three Apple services can carry data off your device, and only if you have them
+      switched on:</p>
+    <ul>
+      <li><strong>Game Center</strong> keeps a copy of your saves so a life started on the
+        iPhone can be continued on the iPad or in the headset. Apple holds that copy under
+        your Apple Account, not ours. Sign out of Game Center and the game plays exactly
+        the same, on that device alone.</li>
+      <li><strong>iCloud</strong> stores a small amount of settings and progress in the
+        same way, again under your own account.</li>
+      <li><strong>The App Store</strong> handles any purchase. We never see a card number,
+        an address or a name — Apple tells us only that a purchase happened.</li>
+    </ul>
+    <p>Each of those is governed by Apple's privacy policy, and each can be turned off in
+      your device's own settings.</p>
+
+    <h2>The rating prompt</h2>
+    <p>At most once per version, after a life has run thirty days and raised something,
+      the game may ask what you think of it. That prompt is Apple's, it is shown by the
+      system, and whatever you tap is not reported back to us in any form that identifies
+      you.</p>
+
+    <h2>Children</h2>
+    <p>The game asks for no personal information from anyone, of any age, and has no chat,
+      no social features and no user-to-user contact.</p>
+
+    <h2>This website</h2>
+    <p>The site is hosted by Vercel, which keeps ordinary server logs — the address that
+      made a request, the page asked for, the time. We set no cookies and run no analytics
+      script; there is nothing here to consent to.</p>
+    <p>If you write to us using the form, what you send us is exactly what you type: your
+      note, and a name and an email address if you choose to give them. We use them to
+      answer you and to keep a record of what readers have asked for. They are not sold,
+      not shared, and not added to any marketing list. Ask us and we will delete your
+      message and your address.</p>
+
+    <h2>How long anything is kept</h2>
+    <p>Saved games last until you delete them or delete the app. Letters sent through the
+      form are kept while they are still useful and deleted on request. Server logs age
+      out on the host's own schedule.</p>
+
+    <h2>Changes</h2>
+    <p>If this policy changes in a way that matters, the date at the top changes with it,
+      and the change will be described in the game's own "What's new".</p>
+
+    <h2>Asking us anything</h2>
+    <p>Write through the form on the <a href="/">main page</a> and it reaches a person.</p>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a href="/">Back to The Long Balance</a>
+  </div>
+</footer>
+
+</body>
+</html>
