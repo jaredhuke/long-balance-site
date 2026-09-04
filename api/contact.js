@@ -43,15 +43,19 @@ async function appendToList(entry) {
   const token = process.env.BLOB_READ_WRITE_TOKEN;
   if (!token) return { listed: false, why: 'no store attached' };
   try {
-    const stamp = entry.at.replace(/[:.]/g, '-');
-    const tail = Math.random().toString(36).slice(2, 8);
-    const r = await fetch('https://blob.vercel-storage.com/letters/' + stamp + '-' + tail + '.json', {
+    // THE NAME CARRIES NOTHING AND IS NOT GUESSABLE. A blob store serves what it holds to
+    // anyone who knows the URL, so a letter filed under its own timestamp would be a
+    // stranger's email address behind a name you could count up to. The path is 32 hex
+    // characters of real randomness, and Vercel appends its own suffix on top; nothing
+    // about the writer is in it.
+    const rand = Buffer.from(crypto.getRandomValues(new Uint8Array(16))).toString('hex');
+    const r = await fetch('https://blob.vercel-storage.com/letters/' + rand + '.json', {
       method: 'PUT',
       headers: {
         Authorization: 'Bearer ' + token,
         'x-api-version': '7',
         'x-content-type': 'application/json',
-        'x-add-random-suffix': '0',
+        'x-add-random-suffix': '1',
       },
       body: JSON.stringify(entry),
     });
