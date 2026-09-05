@@ -470,7 +470,10 @@
 <script defer src="/_vercel/insights/script.js"></script>
 <script>
   (function () {
-    var send = function (name, data) { try { window.va('event', { name: name, data: data || {} }); } catch (e) {} };
+    // the same four counts go to the site's own tally as well, so the desk can draw them
+    var tally = function (name) { try { navigator.sendBeacon('/api/hit', new Blob([JSON.stringify({ e: name })], { type: 'application/json' })); } catch (e) {} };
+    var send = function (name, data) { try { window.va('event', { name: name, data: data || {} }); } catch (e) {} tally(name); };
+    tally('visit');
     document.querySelectorAll('[data-event]').forEach(function (el) {
       el.addEventListener('click', function () { send(el.getAttribute('data-event'), { href: el.getAttribute('href') || '' }); });
     });

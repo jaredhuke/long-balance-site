@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>The Valley Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Archivo:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#F4F1EA; --leaf:#FAF7EE; --panel:#ECE7D9; --ink:#22201A; --ink-soft:#68624F; --gold:#6F5E33; --celadon:#5E7A5A; --cinnabar:#AE3220; --hair:#CFC8B4;
+    --serif:'Spectral', Charter, Georgia, serif; --sans:'Archivo', -apple-system, 'Helvetica Neue', Arial, sans-serif}
+  @media (prefers-color-scheme: dark){ :root{--paper:#14140F; --leaf:#1B1B15; --panel:#22221A; --ink:#F0EADA; --ink-soft:#A79C82; --gold:#C9A961; --celadon:#8FA98A; --cinnabar:#E0705A; --hair:#3A3729} }
+  *{box-sizing:border-box} body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--serif); font-weight:300; font-size:16px; line-height:1.5}
+  .wrap{max-width:78rem; margin:0 auto; padding:1.4rem clamp(1rem,3vw,2rem) 4rem}
+  h1{font-weight:400; font-size:1.9rem; margin:0} .sub{color:var(--ink-soft); font-style:italic; margin:.2rem 0 1.4rem}
+  h2{font-weight:400; font-size:1.25rem; margin:1.8rem 0 .6rem}
+  .eyebrow{font-family:var(--sans); font-weight:700; font-size:.64rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin:0 0 .3rem}
+  .kpis{display:grid; gap:.7rem; grid-template-columns:repeat(2,1fr)} @media(min-width:900px){ .kpis{grid-template-columns:repeat(6,1fr)} }
+  .kpi{background:var(--leaf); border:1px solid var(--hair); border-radius:10px; padding:.7rem .8rem}
+  .kpi b{display:block; font-size:1.7rem; font-weight:400; font-variant-numeric:tabular-nums; line-height:1.1}
+  .kpi span{font-family:var(--sans); font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft)}
+  .grid{display:grid; gap:1rem; grid-template-columns:1fr} @media(min-width:900px){ .grid{grid-template-columns:1fr 1fr} }
+  .card{background:var(--panel); border:1px solid var(--hair); border-radius:12px; padding:.9rem 1.1rem}
+  table{border-collapse:collapse; width:100%; font-size:.9em}
+  th{font-family:var(--sans); font-weight:700; font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); text-align:left; padding:.4rem .5rem; border-bottom:1px solid var(--hair)}
+  td{padding:.45rem .5rem; border-bottom:1px solid var(--hair); vertical-align:top; font-variant-numeric:tabular-nums}
+  td.n{text-align:right} .soft{color:var(--ink-soft)} .bad{color:var(--cinnabar)} .good{color:var(--celadon)}
+  .note{font-size:.9em; color:var(--ink-soft); white-space:pre-wrap; margin:.2rem 0 .6rem; border-left:2px solid var(--hair); padding-left:.6rem}
+  svg{width:100%; height:120px; display:block} .bar{fill:var(--celadon)} .bar2{fill:var(--gold)} .axis{stroke:var(--hair)} text{font-family:var(--sans); font-size:9px; fill:var(--ink-soft)}
+  .scroll{overflow-x:auto} .pill{display:inline-block; font-family:var(--sans); font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; border:1px solid var(--hair); border-radius:999px; padding:.1rem .5rem; color:var(--ink-soft)}
+  #err{color:var(--cinnabar); margin:1rem 0}
+  a{color:inherit}
+</style>
+</head>
+<body><div class="wrap">
+  <p class="eyebrow">The Long Balance · the desk</p>
+  <h1>Who came, who installed, who wrote, what broke</h1>
+  <p class="sub" id="when">Loading…</p>
+  <div id="err" hidden></div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <h2>The site, day by day</h2>
+  <div class="card">
+    <div class="eyebrow">first-party counts — visits (green) and beta clicks (gold), last 21 days</div>
+    <svg id="siteChart" viewBox="0 0 800 120" preserveAspectRatio="none"></svg>
+    <p class="soft" style="margin:.4rem 0 0; font-size:.85em">Vercel Web Analytics keeps the full picture (referrers, countries, devices) in the Vercel dashboard; these are the site's own counts, written by the page, no cookies.</p>
+  </div>
+
+  <div class="grid" style="margin-top:1rem">
+    <div class="card">
+      <div class="eyebrow">TestFlight · builds</div>
+      <div class="scroll"><table id="builds"><thead><tr><th>Build</th><th>Platform</th><th>State</th><th class="n">Installs</th><th class="n">Sessions</th><th class="n">Crashes</th><th class="n">Feedback</th></tr></thead><tbody></tbody></table></div>
+      <p id="groups" class="soft" style="font-size:.85em; margin:.6rem 0 0"></p>
+    </div>
+    <div class="card">
+      <div class="eyebrow">listeners · what testers sent</div>
+      <div id="feedback"></div>
+    </div>
+  </div>
+
+  <h2>Letters from the site</h2>
+  <div class="card"><div id="letters"></div></div>
+
+  <p class="soft" style="font-size:.85em; margin-top:1.6rem">Refreshes itself every five minutes. The address in the bar is the key; do not share it.</p>
+</div>
+<script>
+  const t = new URLSearchParams(location.search).get('t') || '';
+  const el = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const when = (s) => s ? new Date(s).toLocaleString(undefined, {dateStyle:'medium', timeStyle:'short'}) : '—';
+  async function load() {
+    const r = await fetch('/api/dash?t=' + encodeURIComponent(t));
+    if (!r.ok) { el('err').hidden = false; el('err').textContent = (await r.json().catch(()=>({}))).error || ('Could not load: ' + r.status); return; }
+    const d = await r.json();
+    el('when').textContent = 'As of ' + when(d.at);
+    // ── kpis ──
+    const days = Object.keys(d.hits?.byDay || {}).sort();
+    const sum = (ev, n) => days.slice(-n).reduce((a, k) => a + (d.hits.byDay[k][ev] || 0), 0);
+    const builds = d.beta?.builds || [];
+    const latest = builds.filter(b => b.build === (builds[0]||{}).build);
+    const inst = latest.reduce((a,b)=>a+(b.installs||0),0);
+    const kpis = [
+      ['visits · 7d', sum('visit', 7)], ['beta clicks · 7d', sum('beta_click', 7)],
+      ['installs · latest build', inst], ['testers', d.beta?.testers ?? '—'],
+      ['crash reports', (d.feedback?.crashes||[]).length], ['letters', d.letters?.count ?? '—'],
+    ];
+    el('kpis').innerHTML = kpis.map(([k,v]) => `<div class="kpi"><b>${esc(v)}</b><span>${esc(k)}</span></div>`).join('');
+    // ── chart ──
+    const last = []; for (let i = 20; i >= 0; i--) { const dt = new Date(Date.now() - i*864e5).toISOString().slice(0,10); last.push([dt, (d.hits?.byDay?.[dt]?.visit)||0, (d.hits?.byDay?.[dt]?.beta_click)||0]); }
+    const max = Math.max(1, ...last.map(x => x[1]));
+    const W = 800, H = 120, bw = W / last.length;
+    el('siteChart').innerHTML = last.map(([dt,v,b],i) => {
+      const h1 = v/max*95, h2 = b/max*95;
+      return `<rect class="bar" x="${(i*bw+2).toFixed(1)}" y="${(100-h1).toFixed(1)}" width="${(bw-8).toFixed(1)}" height="${h1.toFixed(1)}"/><rect class="bar2" x="${(i*bw+2).toFixed(1)}" y="${(100-h2).toFixed(1)}" width="${((bw-8)/2).toFixed(1)}" height="${h2.toFixed(1)}"/><text x="${(i*bw+2).toFixed(1)}" y="114">${dt.slice(5)}</text>`;
+    }).join('') + `<line class="axis" x1="0" y1="100" x2="${W}" y2="100"/>`;
+    // ── builds ──
+    el('builds').querySelector('tbody').innerHTML = builds.map(b => `<tr><td>${esc(b.build)} <span class="pill">${esc(b.train)}</span></td><td>${esc(b.platform)}</td><td class="${b.state==='VALID'?'good':'soft'}">${esc(b.state)}</td><td class="n">${b.installs??'—'}</td><td class="n">${b.sessions??'—'}</td><td class="n ${b.crashes?'bad':''}">${b.crashes??'—'}</td><td class="n">${b.feedback??'—'}</td></tr>`).join('') || '<tr><td colspan="7" class="soft">No builds returned' + (d.beta?.error ? ' — ' + esc(JSON.stringify(d.beta.error)) : '') + '</td></tr>';
+    el('groups').innerHTML = (d.beta?.groups||[]).map(g => `${esc(g.name)}${g.external ? ' · public' : ' · internal'}${g.link ? ' · <a href="'+esc(g.link)+'">'+esc(g.link)+'</a>' : ''}`).join('<br>');
+    // ── feedback ──
+    const fb = d.feedback || {};
+    const items = [...(fb.crashes||[]).map(x => ({...x, kind:'crash'})), ...(fb.screenshots||[]).map(x => ({...x, kind:'screenshot'}))].sort((a,b)=>(b.at||'').localeCompare(a.at||''));
+    el('feedback').innerHTML = items.length ? items.slice(0,30).map(x => `<div style="margin:0 0 .7rem"><span class="pill ${x.kind==='crash'?'bad':''}">${x.kind}</span> <span class="soft">${when(x.at)} · ${esc(x.device)} · ${esc(x.platform)} ${esc(x.os)}${x.uptime!=null ? ' · up '+Math.round(x.uptime/1000)+'s' : ''}</span>${x.comment ? '<div class="note">'+esc(x.comment)+'</div>' : ''}</div>`).join('') : '<p class="soft">Nothing forwarded yet. TestFlight only sends a crash or a screenshot when the tester taps through the prompt.</p>';
+    // ── letters ──
+    const L = d.letters?.letters || [];
+    el('letters').innerHTML = L.length ? L.map(x => `<div style="margin:0 0 .8rem"><b>${esc(x.name || 'no name')}</b> <span class="soft">${esc(x.email || 'no address')} · ${when(x.at)}</span><div class="note">${esc(x.note)}</div></div>`).join('') : '<p class="soft">No letters yet.</p>';
+  }
+  load().catch(e => { el('err').hidden = false; el('err').textContent = 'Could not load: ' + e; });
+  setInterval(() => load().catch(()=>{}), 300000);
+</script>
+</div></body></html>
