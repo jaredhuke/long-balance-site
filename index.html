@@ -22,6 +22,7 @@
     --gold:#6F5E33; --celadon:#7A9476; --hair:#CFC8B4; --edge:rgba(34,32,26,.08);
     --veil-a:rgba(244,241,234,.95); --veil-b:rgba(244,241,234,.5);
     --veil-c:rgba(244,241,234,0); --veil-d:rgba(244,241,234,.93);
+    --veil-glow:rgba(244,241,234,.92);
     --serif:'Spectral', Charter, Georgia, 'Times New Roman', serif;
     --sans:'Archivo', -apple-system, 'Helvetica Neue', Arial, sans-serif;
   }
@@ -31,6 +32,7 @@
       --gold:#C9A961; --celadon:#8FA98A; --hair:#3A3729; --edge:rgba(240,234,218,.10);
       --veil-a:rgba(20,20,15,.94); --veil-b:rgba(20,20,15,.45);
       --veil-c:rgba(20,20,15,0); --veil-d:rgba(20,20,15,.92);
+      --veil-glow:rgba(20,20,15,.92);
     }
   }
   *{box-sizing:border-box}
@@ -52,12 +54,22 @@
 
   .hero{position:relative; overflow:hidden; background:var(--panel)}
   .hero-img{width:100%; height:min(90vh,900px); object-fit:cover; object-position:50% 52%}
+  /* THE TYPE MUST WIN, ON ANY CROP. The old veil went transparent by a quarter of the way
+     down, and the hero is a tall image shown through object-fit:cover — so on a wide screen
+     the title landed on whatever the middle of the forest happened to be, and was lost in it.
+     The top band now holds to a fifth and fades over the next fifth, which is where the
+     title and its line actually sit. */
   .hero-veil{position:absolute; inset:0; background:linear-gradient(180deg,
-    var(--veil-a) 0%, var(--veil-b) 24%, var(--veil-c) 50%, var(--veil-c) 72%, var(--veil-d) 100%)}
+    var(--veil-a) 0%, var(--veil-a) 20%, var(--veil-b) 40%,
+    var(--veil-c) 58%, var(--veil-c) 74%, var(--veil-d) 100%)}
   .hero-copy{position:absolute; inset:0}
   .hero-copy .wrap{padding-top:clamp(2.5rem,7vh,5rem)}
-  .title{font-size:clamp(2.6rem,7.4vw,5.2rem); line-height:1.02; margin:0 0 .5rem}
-  .tag{font-size:clamp(1.05rem,1.9vw,1.5rem); font-style:italic; color:var(--ink-soft); max-width:28rem; margin:0}
+  .title{font-size:clamp(2.6rem,7.4vw,5.2rem); line-height:1.02; margin:0 0 .5rem;
+    text-shadow:0 1px 26px var(--veil-glow), 0 1px 6px var(--veil-glow)}
+  /* was --ink-soft: a dilute grey over a photograph is the first thing to disappear */
+  .tag{font-size:clamp(1.05rem,1.9vw,1.5rem); font-style:italic; color:var(--ink);
+    max-width:28rem; margin:0; text-shadow:0 1px 20px var(--veil-glow), 0 1px 5px var(--veil-glow)}
+  .platforms{text-shadow:0 1px 18px var(--veil-glow)}
   .hero-foot{position:absolute; left:0; right:0; bottom:0; padding-bottom:clamp(1.25rem,4vh,2.5rem)}
   .platforms{font-family:var(--sans); font-weight:600; font-size:.74rem; letter-spacing:.16em;
     text-transform:uppercase; color:var(--gold); margin:0}
