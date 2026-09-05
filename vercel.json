@@ -4,7 +4,18 @@
   "headers": [
     {
       "source": "/(.*).jpg",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/report",
+      "schedule": "53 8 * * *"
     }
   ]
 }
