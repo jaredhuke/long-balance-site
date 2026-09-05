@@ -185,6 +185,10 @@
 
   .plain{list-style:none; margin:1.6rem auto 0; padding:0; max-width:34rem; text-align:left; display:grid; gap:.5rem; font-size:.95em}
   .plain li{padding-left:1.1rem; position:relative} .plain li::before{content:"·"; position:absolute; left:.2rem; color:var(--gold)}
+
+  .beta-door{display:flex; gap:.6rem; flex-wrap:wrap; align-items:stretch; justify-content:inherit}
+  .beta-door input{font:inherit; font-size:1rem; padding:.7rem .9rem; min-width:14rem; border:1px solid var(--hair, #CFC8B4); border-radius:999px; background:transparent; color:inherit}
+  .beta-door input:focus{outline:2px solid currentColor; outline-offset:2px}
 </style>
 </head>
 <body>
@@ -449,10 +453,13 @@
     <p class="soft" style="margin-top:1.4rem; font-size:.9em; font-style:italic">One purchase. No
       subscription, no advertising, nothing to buy twice.</p>
     <p style="margin-top:2.2rem">
-      <a class="cta" href="https://testflight.apple.com/join/56VXDjSd" data-event="beta_click"
-         rel="noopener">Join the beta on TestFlight</a>
+      <form id="betaDoor" class="beta-door" autocomplete="off">
+        <input id="betaWord" name="word" placeholder="the word you were given" aria-label="The word you were given" required>
+        <button class="cta" type="submit" data-event="beta_click">Join the beta on TestFlight</button>
+      </form>
+      <span id="betaSay" class="soft tiny-note" aria-live="polite"></span>
     </p>
-    <p class="soft tiny-note">iPhone, iPad and Apple Vision Pro. Free while it is in beta.</p>
+    <p class="soft tiny-note">The beta is by invitation, twenty seats at a time. iPhone, iPad and Apple Vision Pro. Free while it is in beta.</p>
     <ul class="plain">
       <li><b>Works offline.</b> On a plane, in a tent, in a valley with no signal. The whole game is on the device.</li>
       <li><b>No ads. No tracking.</b> No analytics in the game, no advertising, no attribution kit.</li>
@@ -584,6 +591,23 @@
   } else {
     document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
   }
+</script>
+
+<script>
+  // THE DOOR. The word goes to /api/beta; the link comes back, and only then does the
+  // page go to TestFlight.
+  (function () {
+    var f = document.getElementById('betaDoor'); if (!f) return;
+    f.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var say = document.getElementById('betaSay'), w = document.getElementById('betaWord').value;
+      say.textContent = 'One moment…';
+      fetch('/api/beta?word=' + encodeURIComponent(w)).then(function (r) { return r.json(); }).then(function (d) {
+        if (d.ok && d.link) { say.textContent = 'Opening TestFlight.'; location.href = d.link; }
+        else { say.textContent = d.error || 'That is not the word.'; }
+      }).catch(function () { say.textContent = 'Could not reach the door. Try again in a moment.'; });
+    });
+  })();
 </script>
 </body>
 </html>

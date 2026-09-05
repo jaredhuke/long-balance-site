@@ -66,6 +66,14 @@
   <div class="card">
     <div class="eyebrow">TestFlight · testers, as Apple keeps them</div>
     <div class="scroll"><table id="testers"><thead><tr><th>Name</th><th>Address</th><th>State</th><th>Came by</th></tr></thead><tbody></tbody></table></div>
+    <form id="inviteForm" style="display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.9rem; align-items:center">
+      <span class="eyebrow" style="margin:0">invite one</span>
+      <input id="invFirst" placeholder="first name" autocomplete="off" style="font:inherit; padding:.4rem .6rem; border:1px solid var(--hair); border-radius:8px; background:var(--leaf); color:var(--ink); width:9rem">
+      <input id="invLast" placeholder="last name" autocomplete="off" style="font:inherit; padding:.4rem .6rem; border:1px solid var(--hair); border-radius:8px; background:var(--leaf); color:var(--ink); width:9rem">
+      <input id="invEmail" placeholder="address" autocomplete="off" required style="font:inherit; padding:.4rem .6rem; border:1px solid var(--hair); border-radius:8px; background:var(--leaf); color:var(--ink); min-width:14rem; flex:1">
+      <button style="font:inherit; padding:.4rem .9rem; border:1px solid var(--hair); border-radius:8px; background:var(--panel); color:var(--ink); cursor:pointer">Send Apple's invitation</button>
+      <span id="invSay" class="soft" style="font-size:.9em"></span>
+    </form>
   </div>
 
   <h2>Letters from the site</h2>
@@ -134,6 +142,13 @@
     const L = d.letters?.letters || [];
     el('letters').innerHTML = L.length ? L.map(x => `<div style="margin:0 0 .8rem"><b>${esc(x.name || 'no name')}</b> <span class="soft">${esc(x.email || 'no address')} · ${when(x.at)}</span><div class="note">${esc(x.note)}</div></div>`).join('') : '<p class="soft">No letters yet.</p>';
   }
+  el('inviteForm').onsubmit = async (ev) => {
+    ev.preventDefault(); const say = el('invSay'); say.textContent = 'Sending…';
+    const r = await fetch('/api/invite', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ t, email: el('invEmail').value, first: el('invFirst').value, last: el('invLast').value }) });
+    const d = await r.json().catch(() => ({}));
+    say.textContent = d.ok ? ('Invited ' + d.invited + '. Apple mails them the link.') : (d.error || 'Could not invite.');
+    if (d.ok) { el('invEmail').value = ''; el('invFirst').value = ''; el('invLast').value = ''; load().catch(()=>{}); }
+  };
   load().catch(e => { el('err').hidden = false; el('err').textContent = 'Could not load: ' + e; });
   setInterval(() => load().catch(()=>{}), 300000);
 </script>
