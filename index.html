@@ -176,6 +176,12 @@
   .arc .mark{font-family:var(--sans); font-weight:700; font-size:.68rem; letter-spacing:.2em;
     text-transform:uppercase; color:var(--ink-soft); margin:0}
   .arc li.now .mark{color:var(--gold)}
+
+  .cta{display:inline-block; font-family:var(--sans); font-weight:700; font-size:.86rem;
+    letter-spacing:.06em; text-transform:uppercase; text-decoration:none; color:var(--paper);
+    background:var(--ink); border-radius:999px; padding:.85rem 1.7rem}
+  .cta:hover{opacity:.9}
+  .tiny-note{font-size:.8em; margin-top:.6rem}
 </style>
 </head>
 <body>
@@ -439,6 +445,11 @@
     <p class="price">Own the Valley <b>$9.99</b></p>
     <p class="soft" style="margin-top:1.4rem; font-size:.9em; font-style:italic">One purchase. No
       subscription, no advertising, nothing to buy twice.</p>
+    <p style="margin-top:2.2rem">
+      <a class="cta" href="https://testflight.apple.com/join/56VXDjSd" data-event="beta_click"
+         rel="noopener">Join the beta on TestFlight</a>
+    </p>
+    <p class="soft tiny-note">iPhone, iPad and Apple Vision Pro. Free while it is in beta.</p>
   </div>
 </section>
 
@@ -450,6 +461,31 @@
       <a href="/privacy">Data &amp; privacy</a></span>
   </div>
 </footer>
+
+<!-- WEB ANALYTICS. Vercel's, not Google's: no cookies, no cross-site identifier, no consent
+     banner to click through — a hashed, daily-rotating visitor key and nothing else. The
+     privacy page describes exactly this. The events below count the three things the
+     owner asked to see: who joins the beta, who writes, and who reads the price. -->
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script>
+  (function () {
+    var send = function (name, data) { try { window.va('event', { name: name, data: data || {} }); } catch (e) {} };
+    document.querySelectorAll('[data-event]').forEach(function (el) {
+      el.addEventListener('click', function () { send(el.getAttribute('data-event'), { href: el.getAttribute('href') || '' }); });
+    });
+    var contact = document.getElementById('contact');
+    if (contact) contact.addEventListener('click', function () { send('write_open'); });
+    var letter = document.getElementById('letter');
+    if (letter) { var f = letter.querySelector('form'); if (f) f.addEventListener('submit', function () { send('write_send'); }); }
+    var price = document.querySelector('.price');
+    if (price && 'IntersectionObserver' in window) {
+      var seen = false;
+      new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting && !seen) { seen = true; send('price_seen'); } }); }).observe(price);
+    }
+  })();
+</script>
+
 
 
 <dialog id="letter" aria-labelledby="letter-h">

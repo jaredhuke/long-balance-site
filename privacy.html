@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Data & Privacy — The Long Balance</title>
-<meta name="description" content="What The Long Balance stores, what it sends, and what it does not collect. There is no analytics, no advertising and no tracking in this game.">
+<meta name="description" content="What The Long Balance stores, what it sends, and what it does not collect. There is no analytics, no advertising and no tracking in the game; the website counts visits in aggregate, without cookies.">
 <meta name="robots" content="index,follow">
 <meta name="theme-color" content="#F4F1EA" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#14140F" media="(prefers-color-scheme: dark)">
@@ -102,8 +102,13 @@
 
     <h2>This website</h2>
     <p>The site is hosted by Vercel, which keeps ordinary server logs — the address that
-      made a request, the page asked for, the time. We set no cookies and run no analytics
-      script; there is nothing here to consent to.</p>
+      made a request, the page asked for, the time.</p>
+    <p>We count visits with Vercel Web Analytics. It sets no cookies, keeps no identifier
+      that follows you to another site, and reports only in aggregate — how many people
+      came, from which country, on what kind of device, from which site they arrived, and
+      which of three buttons they pressed (the beta link, the contact form, the price). It
+      cannot tell us who you are, and we do not try to find out. There is nothing here to
+      consent to, because nothing here is kept about you.</p>
     <p>If you write to us using the form, what you send us is exactly what you type: your
       note, and a name and an email address if you choose to give them. We use them to
       answer you and to keep a record of what readers have asked for. They are not sold,
@@ -130,6 +135,8 @@
     <a href="/">Back to The Long Balance</a>
   </div>
 </footer>
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
 
 </body>
 </html>
