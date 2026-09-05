@@ -101,16 +101,27 @@ async function hits() {
   return { byDay };
 }
 
+// ── the latest daily report, written by api/report.js on the cron ─────────────────
+async function latestReport() {
+  const token = process.env.BLOB_READ_WRITE_TOKEN;
+  if (!token) return null;
+  const r = await fetch('https://blob.vercel-storage.com/?prefix=reports/&limit=100', { headers: { Authorization: 'Bearer ' + token, 'x-api-version': '7' } });
+  if (!r.ok) return null;
+  const list = ((await r.json()).blobs || []).sort((a, b) => (b.pathname || '').localeCompare(a.pathname || ''));
+  if (!list.length) return null;
+  try { return await (await fetch(list[0].url)).json(); } catch (e) { return null; }
+}
+
 export default async function handler(req, res) {
   const want = process.env.DASH_TOKEN;
   const got = (req.query && req.query.t) || '';
   if (!want || got !== want) return res.status(401).json({ ok: false, error: 'This page has a key, and that was not it.' });
   const token = ascToken();
-  const [b, f, l, h] = await Promise.all([
+  const [b, f, l, h, rep] = await Promise.all([
     token ? beta(token) : { error: 'App Store Connect key not configured' },
     token ? feedback(token) : { error: 'App Store Connect key not configured' },
-    letters(), hits(),
+    letters(), hits(), latestReport(),
   ]);
   res.setHeader('Cache-Control', 'private, max-age=120');
-  return res.status(200).json({ ok: true, at: new Date().toISOString(), beta: b, feedback: f, letters: l, hits: h });
+  return res.status(200).json({ ok: true, at: new Date().toISOString(), beta: b, feedback: f, letters: l, hits: h, report: rep });
 }

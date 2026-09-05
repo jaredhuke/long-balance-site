@@ -40,6 +40,7 @@
   <p class="sub" id="when">Loading…</p>
   <div id="err" hidden></div>
 
+  <div class="card" id="daily" hidden style="margin-bottom:1rem"><div class="eyebrow">the morning's report</div><div id="dailyBody"></div></div>
   <div class="kpis" id="kpis"></div>
 
   <h2>The site, day by day</h2>
@@ -76,6 +77,12 @@
     if (!r.ok) { el('err').hidden = false; el('err').textContent = (await r.json().catch(()=>({}))).error || ('Could not load: ' + r.status); return; }
     const d = await r.json();
     el('when').textContent = 'As of ' + when(d.at);
+    // ── the morning's report ──
+    if (d.report) {
+      const r = d.report, pct = (a,b) => b ? Math.round((a-b)/b*100) : (a?100:0);
+      el('daily').hidden = false;
+      el('dailyBody').innerHTML = `<b>${esc(r.date)}</b> · visitors ${r.site.yesterday.visits} yesterday, ${r.site.week.visits} this week (${pct(r.site.week.visits, r.site.prior.visits)>=0?'+':''}${pct(r.site.week.visits, r.site.prior.visits)}% on the week before) · beta clicks ${r.site.week.beta} this week · installs ${r.beta.installs ?? '—'} · new crash reports ${r.beta.newCrashes ?? '—'} · letters ${r.letters}`;
+    }
     // ── kpis ──
     const days = Object.keys(d.hits?.byDay || {}).sort();
     const sum = (ev, n) => days.slice(-n).reduce((a, k) => a + (d.hits.byDay[k][ev] || 0), 0);
