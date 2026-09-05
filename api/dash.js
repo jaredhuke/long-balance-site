@@ -79,6 +79,40 @@ async function feedback(token) {
   };
 }
 
+// ── SESSIONS (owner: "how often they open, total session length, average session time") ──
+// Opens are counted by file name; the small app_session files of the last fourteen days
+// are read for their seconds and install id. Nothing about a person is in any of them.
+async function sessions() {
+  const token = process.env.BLOB_READ_WRITE_TOKEN;
+  const out = { opens: 0, sessions: 0, installs: 0, totalSecs: 0, avgSecs: 0, byDay: {} };
+  if (!token) return out;
+  try {
+    const r = await fetch('https://blob.vercel-storage.com/?prefix=hits/&limit=1000', { headers: { Authorization: 'Bearer ' + token, 'x-api-version': '7' } });
+    const list = r.ok ? (await r.json()).blobs || [] : [];
+    const cutoff = new Date(Date.now() - 14 * 864e5).toISOString().slice(0, 10);
+    const files = list.filter(b => /^hits\/\d{4}-\d{2}-\d{2}\/app_(open|session)-/.test(b.pathname || '') && b.pathname.slice(5, 15) >= cutoff);
+    const installs = new Set();
+    for (const b of files) {
+      const day = b.pathname.slice(5, 15);
+      out.byDay[day] = out.byDay[day] || { opens: 0, secs: 0, sessions: 0 };
+      if (b.pathname.includes('/app_open-')) { out.opens++; out.byDay[day].opens++; }
+    }
+    const sess = files.filter(b => b.pathname.includes('/app_session-')).slice(-400);
+    const bodies = await Promise.all(sess.map(async b => { try { return await (await fetch(b.url)).json(); } catch (e) { return null; } }));
+    bodies.forEach((x, k) => {
+      if (!x) return;
+      const day = sess[k].pathname.slice(5, 15);
+      const secs = Math.min(6 * 3600, Math.max(0, Number(x.secs) || 0));
+      out.totalSecs += secs; out.sessions++;
+      if (x.install) installs.add(String(x.install));
+      out.byDay[day].secs += secs; out.byDay[day].sessions++;
+    });
+    out.installs = installs.size;
+    out.avgSecs = out.sessions ? Math.round(out.totalSecs / out.sessions) : 0;
+  } catch (e) { /* the tally is optional */ }
+  return out;
+}
+
 // ── the letters, from the store the contact form writes to ──────────────────────
 async function letters() {
   const token = process.env.BLOB_READ_WRITE_TOKEN;
@@ -129,11 +163,11 @@ export default async function handler(req, res) {
   if (!got) return res.status(401).json({ ok: false, error: 'This page has a key, and the address you opened has none in it — use the desk link with ?t= on the end.' });
   if (got !== want) return res.status(401).json({ ok: false, error: 'This page has a key, and that was not it.' });
   const token = ascToken();
-  const [b, f, l, h, rep] = await Promise.all([
+  const [b, f, l, h, rep, sess] = await Promise.all([
     token ? beta(token) : { error: 'App Store Connect key not configured' },
     token ? feedback(token) : { error: 'App Store Connect key not configured' },
-    letters(), hits(), latestReport(),
+    letters(), hits(), latestReport(), sessions(),
   ]);
   res.setHeader('Cache-Control', 'private, max-age=120');
-  return res.status(200).json({ ok: true, at: new Date().toISOString(), beta: b, feedback: f, letters: l, hits: h, report: rep });
+  return res.status(200).json({ ok: true, at: new Date().toISOString(), beta: b, feedback: f, letters: l, hits: h, report: rep, sessions: sess });
 }

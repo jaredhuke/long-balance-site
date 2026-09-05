@@ -43,6 +43,13 @@
   <div class="card" id="daily" hidden style="margin-bottom:1rem"><div class="eyebrow">the morning's report</div><div id="dailyBody"></div></div>
   <div class="kpis" id="kpis"></div>
 
+  <h2>The app, day by day</h2>
+  <div class="card">
+    <div class="eyebrow">opens (green) and hours played (gold), last 14 days — from the app's own two events</div>
+    <svg id="appChart" viewBox="0 0 800 120" preserveAspectRatio="none"></svg>
+    <p class="soft" id="appLine" style="margin:.4rem 0 0; font-size:.85em"></p>
+  </div>
+
   <h2>The site, day by day</h2>
   <div class="card">
     <div class="eyebrow">first-party counts — visits (green) and beta clicks (gold), last 21 days</div>
@@ -119,6 +126,14 @@
       ['crash reports', (d.feedback?.crashes||[]).length], ['letters', d.letters?.count ?? '—'],
     ];
     el('kpis').innerHTML = kpis.map(([k,v]) => `<div class="kpi"><b>${esc(v)}</b><span>${esc(k)}</span></div>`).join('');
+    // ── the app's sessions ──
+    const S = d.sessions || { byDay: {} };
+    const last14 = []; for (let i = 13; i >= 0; i--) { const dt = new Date(Date.now() - i*864e5).toISOString().slice(0,10); const r = (S.byDay||{})[dt] || {}; last14.push([dt, r.opens||0, (r.secs||0)/3600]); }
+    const maxO = Math.max(1, ...last14.map(x => x[1])), maxH = Math.max(0.25, ...last14.map(x => x[2]));
+    const bw2 = 800 / last14.length;
+    el('appChart').innerHTML = last14.map(([dt,o,hh],i) => { const h1 = o/maxO*95, h2 = hh/maxH*95; return `<rect class="bar" x="${(i*bw2+2).toFixed(1)}" y="${(100-h1).toFixed(1)}" width="${(bw2-8).toFixed(1)}" height="${h1.toFixed(1)}"/><rect class="bar2" x="${(i*bw2+2).toFixed(1)}" y="${(100-h2).toFixed(1)}" width="${((bw2-8)/2).toFixed(1)}" height="${h2.toFixed(1)}"/><text x="${(i*bw2+2).toFixed(1)}" y="114">${dt.slice(5)}</text>`; }).join('') + '<line class="axis" x1="0" y1="100" x2="800" y2="100"/>';
+    const mins = (s) => s >= 3600 ? (s/3600).toFixed(1) + ' h' : Math.round(s/60) + ' min';
+    el('appLine').textContent = !S.opens && !S.sessions ? 'No app sessions reported yet — the beacon ships with build 58.' : `${S.opens} opens · ${S.sessions} sessions · ${S.installs} devices · ${mins(S.totalSecs)} played in all · ${mins(S.avgSecs)} a session on average.`;
     // ── chart ──
     const last = []; for (let i = 20; i >= 0; i--) { const dt = new Date(Date.now() - i*864e5).toISOString().slice(0,10); last.push([dt, (d.hits?.byDay?.[dt]?.visit)||0, (d.hits?.byDay?.[dt]?.beta_click)||0]); }
     const max = Math.max(1, ...last.map(x => x[1]));
