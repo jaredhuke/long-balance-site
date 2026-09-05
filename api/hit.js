@@ -5,7 +5,12 @@
 // by day and event, so the dashboard can count them by NAME without ever reading one.
 // No cookie, no identifier, nothing about the visitor: a day, a word, a random suffix.
 
-const EVENTS = new Set(['visit', 'beta_click', 'write_open', 'write_send', 'price_seen']);
+// The app sends two of its own (owner: "track how often they open, total session length,
+// average session time"): app_open when it comes to the front, app_session with the
+// seconds when it goes to the back. With them ride a random install id (so opens can be
+// counted per device), the build number and the platform — nothing about the person.
+const EVENTS = new Set(['visit', 'beta_click', 'write_open', 'write_send', 'price_seen', 'app_open', 'app_session']);
+const KEEP = ['secs', 'build', 'platform', 'install', 'day'];
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') { res.setHeader('Allow', 'POST'); return res.status(405).end(); }
@@ -20,7 +25,7 @@ export default async function handler(req, res) {
     await fetch(`https://blob.vercel-storage.com/hits/${day}/${ev}-${rand}.json`, {
       method: 'PUT',
       headers: { Authorization: 'Bearer ' + token, 'x-api-version': '7', 'x-content-type': 'application/json', 'x-add-random-suffix': '0' },
-      body: '{}',
+      body: JSON.stringify(Object.fromEntries(KEEP.filter(k => body && body[k] != null).map(k => [k, typeof body[k] === 'number' ? body[k] : String(body[k]).slice(0, 40)]))),
     });
   } catch (e) { /* a lost tick is a lost tick */ }
   return res.status(204).end();
