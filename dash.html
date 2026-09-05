@@ -37,7 +37,7 @@
 <body><div class="wrap">
   <p class="eyebrow">The Long Balance · the desk</p>
   <h1>Who came, who installed, who wrote, what broke</h1>
-  <p class="sub" id="when">Loading…</p>
+  <p class="sub" id="when">Gathering the numbers — Apple's side takes about ten seconds…</p>
   <div id="err" hidden></div>
 
   <div class="card" id="daily" hidden style="margin-bottom:1rem"><div class="eyebrow">the morning's report</div><div id="dailyBody"></div></div>
@@ -88,6 +88,7 @@
   const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const when = (s) => s ? new Date(s).toLocaleString(undefined, {dateStyle:'medium', timeStyle:'short'}) : '—';
   async function load() {
+    el('when').textContent = 'Gathering the numbers — Apple\'s side takes about ten seconds…';
     const r = await fetch('/api/dash?t=' + encodeURIComponent(t));
     if (!r.ok) {
       const why = (await r.json().catch(()=>({}))).error || ('Could not load: ' + r.status);
