@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Long Balance</title>
-<meta name="description" content="A deterministic survival-to-civilization game for iPhone, iPad, Mac and Apple Vision Pro. Take what the valley gives, and give it back — or your grandchildren inherit a ruin.">
-<meta property="og:title" content="The Long Balance">
+<title>The Long Balance: Survive</title>
+<meta name="description" content="The first of three. A survival-to-civilization game for iPhone, iPad, Mac and Apple Vision Pro. Take what the valley gives, and give it back — or your grandchildren inherit a ruin.">
+<meta property="og:title" content="The Long Balance: Survive">
 <meta property="og:description" content="Take, and give back. Cut every tree and the rain that the forest sponged now strips your soil. Nine valleys, each with its own weather, plants and beasts.">
 <meta property="og:image" content="/hero-forest.jpg">
 <meta property="og:type" content="website">
@@ -163,6 +163,19 @@
   @media (prefers-color-scheme: dark){ dialog#letter .say.bad{color:#E0705A} }
   /* the honeypot: present for a robot, absent for a person and for a screen reader */
   .hedge{position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden}
+
+  /* THE ARC OF THE SERIES. Three books, and the first one is marked as the one that
+     exists — the other two must never be mistaken for something you can buy today. */
+  .arc{list-style:none; margin:2.6rem 0 0; padding:0; display:grid; gap:1.6rem}
+  @media(min-width:820px){ .arc{grid-template-columns:repeat(3,1fr); gap:2rem} }
+  .arc li{border:1px solid var(--hair); border-radius:14px; padding:1.4rem 1.5rem 1.6rem;
+    background:var(--leaf)}
+  .arc li.now{border-color:var(--gold); background:var(--panel)}
+  .arc h3{font-size:1.7rem; margin:.1rem 0 .6rem}
+  .arc p{font-size:.95em; margin:0}
+  .arc .mark{font-family:var(--sans); font-weight:700; font-size:.68rem; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--ink-soft); margin:0}
+  .arc li.now .mark{color:var(--gold)}
 </style>
 </head>
 <body>
@@ -371,11 +384,49 @@
     <ol class="laws">
       <li class="reveal"><b>Everything you see is true.</b><span>What a person wears says what you have
         made. Black earth on the plan is black earth in the world. Nothing is decoration.</span></li>
-      <li class="reveal"><b>The same day plays the same way.</b><span>The simulation is deterministic.
-        Your valley is not a roll of the dice — it is a place, and it will still be that place
-        tomorrow.</span></li>
+      <li class="reveal"><b>The valley is cast once, and then it is real.</b><span>Plenty happens that
+        you cannot predict — a heat dome settles for a fortnight, the salmon run comes early or late,
+        a mast year buries the ground in acorns. But none of it is a coin flipped behind your back:
+        every one of those was decided by the valley's own seed before you arrived, and the same
+        valley lived the same way replays exactly. Nothing rerolls because you reloaded.</span></li>
       <li class="reveal"><b>Nothing is free.</b><span>Every hour spent is an hour not spent elsewhere,
         and every yield taken is taken from something that has to recover.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="narrow">
+      <p class="eyebrow">The first of three</p>
+      <h2>Survive, then Thrive, then Refine</h2>
+      <p>One valley is a long story, and it does not all belong in one game. <b>Survive</b> is the
+        whole of it that a household can do alone: fire, food, a roof, the first winters, and the
+        slow argument with the ground that decides whether your grandchildren inherit a place or a
+        ruin. It is finished, and it is what you can buy.</p>
+      <p class="soft">The two that follow are planned, not promised — and each is a game, not an
+        expansion pack.</p>
+    </div>
+    <ol class="arc">
+      <li class="reveal now">
+        <p class="mark">Book one</p>
+        <h3>Survive</h3>
+        <p>Stone, clay and the homestead. One keeper, then a family, and everything a pair of hands
+          can make from what a valley actually contains. Out now.</p>
+      </li>
+      <li class="reveal">
+        <p class="mark">Book two</p>
+        <h3>Thrive</h3>
+        <p>The hamlet and the village. Neighbours who did not choose you, roofs that are not yours,
+          a road that brings strangers, and the things a settlement can make that no household can —
+          because they need more hands than one house has.</p>
+      </li>
+      <li class="reveal">
+        <p class="mark">Book three</p>
+        <h3>Refine</h3>
+        <p>Metal at scale, and the crafts that need a whole society standing behind them: people who
+          do one thing all year, and a valley asked to carry far more than it ever has.</p>
+      </li>
     </ol>
   </div>
 </section>
