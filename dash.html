@@ -74,14 +74,23 @@
   <p class="soft" style="font-size:.85em; margin-top:1.6rem">Refreshes itself every five minutes. The address in the bar is the key; do not share it.</p>
 </div>
 <script>
-  const t = new URLSearchParams(location.search).get('t') || '';
+  let t = new URLSearchParams(location.search).get('t') || '';
+  try { if (!t) t = localStorage.getItem('desk.key') || ''; } catch (e) {}
   const el = (id) => document.getElementById(id);
   const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const when = (s) => s ? new Date(s).toLocaleString(undefined, {dateStyle:'medium', timeStyle:'short'}) : '—';
   async function load() {
     const r = await fetch('/api/dash?t=' + encodeURIComponent(t));
-    if (!r.ok) { el('err').hidden = false; el('err').textContent = (await r.json().catch(()=>({}))).error || ('Could not load: ' + r.status); return; }
+    if (!r.ok) {
+      const why = (await r.json().catch(()=>({}))).error || ('Could not load: ' + r.status);
+      el('err').hidden = false;
+      el('err').innerHTML = `<p style="margin:0 0 .5rem">${esc(why)}</p><form id="keyForm" style="display:flex; gap:.5rem; flex-wrap:wrap"><input id="keyIn" placeholder="paste the desk key" autocomplete="off" style="flex:1; min-width:14rem; font:inherit; padding:.45rem .6rem; border:1px solid var(--hair); border-radius:8px; background:var(--leaf); color:var(--ink)"><button style="font:inherit; padding:.45rem .9rem; border:1px solid var(--hair); border-radius:8px; background:var(--panel); color:var(--ink); cursor:pointer">Open the desk</button></form>`;
+      el('keyForm').onsubmit = (ev) => { ev.preventDefault(); const k = el('keyIn').value.trim(); if (!k) return; try { localStorage.setItem('desk.key', k); } catch (e) {} location.search = '?t=' + encodeURIComponent(k); };
+      return;
+    }
     const d = await r.json();
+    try { localStorage.setItem('desk.key', t); } catch (e) {}
+    el('err').hidden = true;
     el('when').textContent = 'As of ' + when(d.at);
     // ── the morning's report ──
     if (d.report) {
