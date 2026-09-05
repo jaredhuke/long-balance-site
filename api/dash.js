@@ -52,7 +52,7 @@ async function beta(token) {
   // WHO IS IN THE BETA (owner: "can i get a list of beta testers on the admin") — every
   // tester on the app, however they came, with the state Apple keeps: invited, accepted,
   // installed. The count stays as it was; the list rides beside it.
-  const testers = await asc(`/apps/${APP_ID}/betaTesters?limit=200&fields[betaTesters]=firstName,lastName,email,state,inviteType`, token);
+  const testers = await asc(`/betaTesters?filter[apps]=${APP_ID}&limit=200&fields[betaTesters]=firstName,lastName,email,state,inviteType`, token);   // the /apps/…/betaTesters form answers 403
   const testerList = (testers.data || []).map(t => ({
     name: [t.attributes.firstName, t.attributes.lastName].filter(Boolean).join(' ') || '—',
     email: t.attributes.email || '—',
