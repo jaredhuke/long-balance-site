@@ -62,6 +62,12 @@
     </div>
   </div>
 
+  <h2>Who is in the beta</h2>
+  <div class="card">
+    <div class="eyebrow">TestFlight · testers, as Apple keeps them</div>
+    <div class="scroll"><table id="testers"><thead><tr><th>Name</th><th>Address</th><th>State</th><th>Came by</th></tr></thead><tbody></tbody></table></div>
+  </div>
+
   <h2>Letters from the site</h2>
   <div class="card"><div id="letters"></div></div>
 
@@ -106,6 +112,11 @@
     // ── builds ──
     el('builds').querySelector('tbody').innerHTML = builds.map(b => `<tr><td>${esc(b.build)} <span class="pill">${esc(b.train)}</span></td><td>${esc(b.platform)}</td><td class="${b.state==='VALID'?'good':'soft'}">${esc(b.state)}</td><td class="n">${b.installs??'—'}</td><td class="n">${b.sessions??'—'}</td><td class="n ${b.crashes?'bad':''}">${b.crashes??'—'}</td><td class="n">${b.feedback??'—'}</td></tr>`).join('') || '<tr><td colspan="7" class="soft">No builds returned' + (d.beta?.error ? ' — ' + esc(JSON.stringify(d.beta.error)) : '') + '</td></tr>';
     el('groups').innerHTML = (d.beta?.groups||[]).map(g => `${esc(g.name)}${g.external ? ' · public' : ' · internal'}${g.link ? ' · <a href="'+esc(g.link)+'">'+esc(g.link)+'</a>' : ''}`).join('<br>');
+    // ── testers ──
+    const T = d.beta?.testerList || [];
+    const stateWord = (s) => ({ INSTALLED:'installed', ACCEPTED:'accepted', INVITED:'invited', NOT_INVITED:'not invited', REVOKED:'revoked' }[s] || String(s||'—').toLowerCase());
+    const cameBy = (s) => ({ PUBLIC_LINK:'public link', EMAIL:'invitation', NOT_INVITED:'—' }[s] || String(s||'—').toLowerCase().replace('_',' '));
+    el('testers').querySelector('tbody').innerHTML = T.length ? T.map(x => `<tr><td>${esc(x.name)}</td><td>${esc(x.email)}</td><td class="${x.state==='INSTALLED'?'good':'soft'}">${esc(stateWord(x.state))}</td><td class="soft">${esc(cameBy(x.invite))}</td></tr>`).join('') : '<tr><td colspan="4" class="soft">No testers on the app yet.</td></tr>';
     // ── feedback ──
     const fb = d.feedback || {};
     const items = [...(fb.crashes||[]).map(x => ({...x, kind:'crash'})), ...(fb.screenshots||[]).map(x => ({...x, kind:'screenshot'}))].sort((a,b)=>(b.at||'').localeCompare(a.at||''));

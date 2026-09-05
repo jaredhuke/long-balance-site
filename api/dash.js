@@ -49,11 +49,21 @@ async function beta(token) {
     });
   }
   const groups = await asc(`/apps/${APP_ID}/betaGroups?limit=10`, token);
-  const testers = await asc(`/apps/${APP_ID}/betaTesters?limit=1`, token);
+  // WHO IS IN THE BETA (owner: "can i get a list of beta testers on the admin") — every
+  // tester on the app, however they came, with the state Apple keeps: invited, accepted,
+  // installed. The count stays as it was; the list rides beside it.
+  const testers = await asc(`/apps/${APP_ID}/betaTesters?limit=200&fields[betaTesters]=firstName,lastName,email,state,inviteType`, token);
+  const testerList = (testers.data || []).map(t => ({
+    name: [t.attributes.firstName, t.attributes.lastName].filter(Boolean).join(' ') || '—',
+    email: t.attributes.email || '—',
+    state: t.attributes.state || '—',
+    invite: t.attributes.inviteType || '—',
+  }));
   return {
     builds: rows,
     groups: (groups.data || []).map(g => ({ name: g.attributes.name, external: !g.attributes.isInternalGroup, link: g.attributes.publicLink, limit: g.attributes.publicLinkLimit })),
-    testers: testers?.meta?.paging?.total ?? null,
+    testers: testers?.meta?.paging?.total ?? testerList.length,
+    testerList,
   };
 }
 
@@ -115,7 +125,9 @@ async function latestReport() {
 export default async function handler(req, res) {
   const want = process.env.DASH_TOKEN;
   const got = (req.query && req.query.t) || '';
-  if (!want || got !== want) return res.status(401).json({ ok: false, error: 'This page has a key, and that was not it.' });
+  if (!want) return res.status(401).json({ ok: false, error: 'This address has no key set on it. Open the desk on long-balance.vercel.app, from its own link.' });
+  if (!got) return res.status(401).json({ ok: false, error: 'This page has a key, and the address you opened has none in it — use the desk link with ?t= on the end.' });
+  if (got !== want) return res.status(401).json({ ok: false, error: 'This page has a key, and that was not it.' });
   const token = ascToken();
   const [b, f, l, h, rep] = await Promise.all([
     token ? beta(token) : { error: 'App Store Connect key not configured' },
