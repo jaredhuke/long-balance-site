@@ -32,7 +32,7 @@ async function asc(path, token) {
 
 // ── the beta: builds, installs, sessions, crashes, feedback ──────────────────────
 async function beta(token) {
-  const builds = await asc(`/builds?filter[app]=${APP_ID}&limit=12&sort=-uploadedDate&include=preReleaseVersion&fields[builds]=version,uploadedDate,processingState&fields[preReleaseVersions]=platform,version`, token);
+  const builds = await asc(`/builds?filter[app]=${APP_ID}&limit=12&sort=-uploadedDate&include=preReleaseVersion&fields[builds]=version,uploadedDate,processingState,preReleaseVersion&fields[preReleaseVersions]=platform,version`, token);
   if (builds.error) return { error: builds };
   const pre = Object.fromEntries((builds.included || []).map(i => [i.id, i.attributes]));
   const rows = [];
